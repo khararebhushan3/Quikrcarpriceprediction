@@ -7,7 +7,8 @@ app = Flask(__name__, template_folder='templates')
 
 # Load the model and preprocessed data
 regmodel = pickle.load(open('regmodel.pkl', 'rb'))
-car = pd.read_csv('Cleaned_Car_data.csv')
+car_1=pd.read_csv('CleaneCar_data.csv')
+print(car_1)
 
 # Function to preprocess and validate input data
 def preprocess_input(data):
@@ -39,7 +40,7 @@ def predict_api():
             return jsonify({'error': error}), 400
         
         # Ensure the input data matches the column order of the preprocessed car data
-        input_df = pd.DataFrame([data], columns=car.columns)
+        input_df = pd.DataFrame([data], columns=car_1.columns)
         
         # Make prediction
         output = regmodel.predict(input_df)
@@ -50,4 +51,3 @@ def predict_api():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
