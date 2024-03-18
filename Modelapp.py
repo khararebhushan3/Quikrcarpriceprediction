@@ -8,6 +8,7 @@ app = Flask(__name__, template_folder='templates')
 # Load the model and preprocessed data
 regmodel = pickle.load(open('regmodel.pkl', 'rb'))
 car=pd.read_csv('Cleaned_Car_data.csv')
+car=pd.read_csv('Cleaned_Car_data.csv')
 
 # Function to preprocess and validate input data
 def preprocess_input(data):
