@@ -73,7 +73,9 @@
         <form id="car-form">
             <div id="error"></div>
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required><br>
+            <select id="name" name="name" required>
+                <option value="">Select a car</option>
+            </select><br>
             
             <label for="company">Company:</label>
             <input type="text" id="company" name="company" required><br>
@@ -102,23 +104,37 @@
     </div>
 
     <script>
+        // Populate the dropdown options dynamically
+        function populateCarNames() {
+            fetch('/get_car_names')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch car names');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var selectElement = document.getElementById("name");
+                selectElement.innerHTML = "<option value=''>Select a car</option>";
+                data.car_names.forEach(name => {
+                    selectElement.innerHTML += "<option value='" + name + "'>" + name + "</option>";
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Call the function to populate car names when the page loads
+        populateCarNames();
+
+        // Make changes to predictPrice function to include updateFormData
         function predictPrice() {
             var name = document.getElementById("name").value;
             var company = document.getElementById("company").value;
             var year = parseInt(document.getElementById("year").value);
             var kms_driven = parseInt(document.getElementById("kms_driven").value);
             var fuel_type = document.getElementById("fuel_type").value;
-
-            // Clear previous result and error messages
-            document.getElementById("result").style.display = "none";
-            document.getElementById("error").innerHTML = "";
-            document.getElementById("prediction").innerHTML = "";
-
-            // Validate year and kms driven
-            if (isNaN(year) || isNaN(kms_driven)) {
-                document.getElementById("error").innerHTML = "Year and Kms driven must be numeric";
-                return;
-            }
 
             // Make AJAX request to Flask API
             var formData = {
@@ -145,10 +161,12 @@
                 return response.json();
             })
             .then(data => {
+                console.log(data); // Log response data for debugging
                 document.getElementById("prediction").innerHTML = "Predicted Price: " + data.prediction.toFixed(2);
                 document.getElementById("result").style.display = "block";
             })
             .catch(error => {
+                console.error('Error:', error); // Log any errors for debugging
                 document.getElementById("error").innerHTML = error.message;
             });
         }

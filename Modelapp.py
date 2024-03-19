@@ -7,8 +7,7 @@ app = Flask(__name__, template_folder='templates')
 
 # Load the model and preprocessed data
 regmodel = pickle.load(open('regmodel.pkl', 'rb'))
-car=pd.read_csv('Cleaned_Car_data.csv')
-car=pd.read_csv('Cleaned_Car_data.csv')
+car = pd.read_csv('Cleaned_Car_data.csv')
 
 # Function to preprocess and validate input data
 def preprocess_input(data):
@@ -49,8 +48,10 @@ def predict_api():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-#if __name__ == "__main__":
-    #app.run(debug=True)
+@app.route('/get_car_names', methods=['GET'])
+def get_car_names():
+    car_names = car['Name'].unique().tolist()
+    return jsonify({'car_names': car_names})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)    
+    app.run(host='0.0.0.0', port=8080)
