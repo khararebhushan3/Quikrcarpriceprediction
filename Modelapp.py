@@ -40,10 +40,10 @@ def predict_api():
         
         # Ensure the input data matches the column order of the preprocessed car data
         input_df = pd.DataFrame([data], columns=car.columns)
-        
+        print(input_df)
         # Make prediction
         output = regmodel.predict(input_df)
-        
+        print(output)
         return jsonify({'prediction': output[0]})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -51,6 +51,7 @@ def predict_api():
 @app.route('/get_car_names', methods=['GET'])
 def get_car_names():
     car_names = car['Name'].unique().tolist()
+    print(car_names)
     return jsonify({'car_names': car_names})
 
 if __name__ == "__main__":
